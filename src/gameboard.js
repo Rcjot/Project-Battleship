@@ -2,6 +2,7 @@ const Ship = require("./ship");
 
 const Gameboard = function () {
     // array of ships
+    const shipArr = [Ship(5), Ship(4), Ship(3), Ship(3), Ship(2)];
 
     const board = Array(10)
         .fill(null)
@@ -113,8 +114,8 @@ const Gameboard = function () {
     }
 
     function recieveAttack(coords) {
-        const x = coords[0];
-        const y = coords[1];
+        const y = coords[0];
+        const x = coords[1];
 
         if (board[x][y] === 1) {
             board[x][y] = "x";
@@ -124,10 +125,20 @@ const Gameboard = function () {
         }
     }
 
+    function checkAllShipsSunk() {
+        for (let ship of shipArr) {
+            console.log(ship.isSunk());
+            if (ship.isSunk() === false) return false;
+        }
+        return true;
+    }
+
     return {
         placeShip,
         printBoard,
         recieveAttack,
+        shipArr,
+        checkAllShipsSunk,
     };
 };
 
