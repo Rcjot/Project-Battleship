@@ -21,7 +21,7 @@ const Gameboard = function () {
 
     function placeShip(ship, coords) {
         const validObj = checkValid(ship, coords);
-        // console.log(validObj);
+        console.log(validObj);
         if (validObj.validity) {
             for (let coords of validObj.coveredCoordsArr) {
                 coordsArr[coords[1]][coords[0]] = ship;
@@ -48,54 +48,66 @@ const Gameboard = function () {
             validity: true,
             coveredCoordsArr: coveredCoordsArr,
         };
-        const notValid = {
-            validity: false,
-        };
+
         switch (ship.getPosition()) {
             case 0: //south
-                if (checkBounds(bounds[0])) {
-                    for (let i = ycoords; i <= bounds[0]; i++) {
+                for (let i = ycoords; i <= bounds[0]; i++) {
+                    if (checkBounds(i)) {
                         Valid.coveredCoordsArr.push([xcoords, i]);
                         if (coordsArr[i][xcoords] !== "") {
-                            return notValid;
+                            Valid.validity = false;
+                            return Valid;
                         }
+                    } else {
+                        Valid.validity = false;
+                        return Valid;
                     }
-                    return Valid;
                 }
-                return notValid;
+                return Valid;
             case 1: //west
-                if (checkBounds(bounds[1])) {
-                    for (let i = xcoords; i >= bounds[1]; i--) {
+                for (let i = xcoords; i >= bounds[1]; i--) {
+                    if (checkBounds(i)) {
                         Valid.coveredCoordsArr.push([i, ycoords]);
                         if (coordsArr[ycoords][i] !== "") {
-                            return notValid;
+                            Valid.validity = false;
+                            return Valid;
                         }
+                    } else {
+                        Valid.validity = false;
+                        return Valid;
                     }
-                    return Valid;
                 }
-                return notValid;
+                return Valid;
             case 2: //north
-                if (checkBounds(bounds[2])) {
-                    for (let i = ycoords; i >= bounds[2]; i--) {
+                for (let i = ycoords; i >= bounds[2]; i--) {
+                    if (checkBounds(i)) {
                         Valid.coveredCoordsArr.push([xcoords, i]);
                         if (coordsArr[i][xcoords] !== "") {
-                            return notValid;
+                            Valid.validity = false;
+                            return Valid;
                         }
+                    } else {
+                        Valid.validity = false;
+                        return Valid;
                     }
-                    return Valid;
                 }
-                return notValid;
+                return Valid;
+
             case 3: //east
-                if (checkBounds(bounds[3])) {
-                    for (let i = xcoords; i <= bounds[3]; i++) {
+                for (let i = xcoords; i <= bounds[3]; i++) {
+                    console.log(i);
+                    if (checkBounds(i)) {
                         Valid.coveredCoordsArr.push([i, ycoords]);
                         if (coordsArr[ycoords][i] !== "") {
-                            return notValid;
+                            Valid.validity = false;
+                            return Valid;
                         }
+                    } else {
+                        Valid.validity = false;
+                        return Valid;
                     }
-                    return Valid;
                 }
-                return notValid;
+                return Valid;
         }
     }
 
@@ -150,6 +162,7 @@ const Gameboard = function () {
         recieveAttack,
         shipArr,
         checkAllShipsSunk,
+        checkValid,
     };
 };
 

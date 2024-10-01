@@ -15,9 +15,10 @@ for (let checkbox of checkBoxes) {
         });
     });
 }
-const divArr = Array(10)
+const divArr = Array(10) //divArr to store all grid and have reference
     .fill(null)
     .map(() => Array(10).fill(null));
+
 for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
         const grid = document.createElement("div");
@@ -31,18 +32,49 @@ for (let i = 0; i < 10; i++) {
 for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
         divArr[i][j].addEventListener("mouseover", () => {
-            if (
-                checkBoxes[0].checked === true ||
-                checkBoxes[1].checked === true ||
-                checkBoxes[2].checked === true ||
-                checkBoxes[3].checked === true ||
-                checkBoxes[4].checked === true
-            ) {
-                divArr[i][j].setAttribute("style", "background-color: red");
-                divArr[i][j + 1].setAttribute(
-                    "style",
-                    "background-color: blue"
+            // console.log(`${j}, ${i}`);
+            if (checkBoxes[0].checked === true) {
+                const validObj = myPlayer.myGameboard.checkValid(
+                    myPlayer.myGameboard.shipArr[0],
+                    [j, i]
                 );
+
+                if (validObj.validity) {
+                    console.log(validObj.coveredCoordsArr);
+                    for (let coords of validObj.coveredCoordsArr) {
+                        divArr[coords[1]][coords[0]].setAttribute(
+                            "style",
+                            "background-color: green"
+                        );
+                    }
+                } else {
+                    for (let coords of validObj.coveredCoordsArr) {
+                        divArr[coords[1]][coords[0]].setAttribute(
+                            "style",
+                            "background-color: red"
+                        );
+                    }
+                }
+            }
+        });
+        divArr[i][j].addEventListener("mouseleave", () => {
+            // console.log(`${j}, ${i}`);
+            if (checkBoxes[0].checked === true) {
+                const validObj = myPlayer.myGameboard.checkValid(
+                    myPlayer.myGameboard.shipArr[0],
+                    [j, i]
+                );
+
+                if (validObj.validity) {
+                    console.log(validObj.coveredCoordsArr);
+                    for (let coords of validObj.coveredCoordsArr) {
+                        divArr[coords[1]][coords[0]].removeAttribute("style");
+                    }
+                } else {
+                    for (let coords of validObj.coveredCoordsArr) {
+                        divArr[coords[1]][coords[0]].removeAttribute("style");
+                    }
+                }
             }
         });
     }
