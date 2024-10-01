@@ -1,5 +1,5 @@
-const Ship = require("../src/ship");
-const Gameboard = require("../src/gameboard");
+const Ship = require("../src/factories/ship");
+const Gameboard = require("../src/factories/gameboard");
 
 test.skip("place ship with different size", () => {
     const myShip1 = Ship(1);

@@ -1,4 +1,4 @@
-const Ship = require("../src/ship");
+const Ship = require("../src/factories/ship");
 
 test("got hit test", () => {
     const myShip = Ship(3);

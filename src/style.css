@@ -1,0 +1,25 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body {
+    min-height: 100vh;
+    max-height: 100vh;
+    padding: 100px;
+}
+button {
+    cursor: pointer;
+}
+#gameboard {
+    display: grid;
+    grid-template-columns: repeat(10, 50px);
+    grid-template-rows: repeat(10, 50px);
+    gap: 1px;
+}
+
+#tile {
+    border: 1px solid black;
+    max-height: 50px;
+    max-width: 50px;
+}

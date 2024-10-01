@@ -20,77 +20,88 @@ const Gameboard = function () {
         );
 
     function placeShip(ship, coords) {
-        // check the ships position and coords, check if it is a placement is valid.
-        const xcoords = coords[0];
-        const ycoords = coords[1];
-        let bounds;
-        let overlapped = false;
-        const coveredCoordsArr = [];
-        switch (ship.getPosition()) {
-            case 0: //south
-                bounds = ycoords + ship.getLength() - 1;
-                if (bounds >= 0 && bounds <= 9) {
-                    for (let i = ycoords; i <= bounds; i++) {
-                        coveredCoordsArr.push([xcoords, i]);
-                        if (coordsArr[i][xcoords] !== "") {
-                            overlapped = true;
-                            break;
-                        }
-                    }
-                }
-
-                break;
-            case 1: //west
-                bounds = xcoords - (ship.getLength() - 1);
-                if (bounds >= 0 && bounds <= 9) {
-                    for (let i = xcoords; i >= bounds; i--) {
-                        coveredCoordsArr.push([i, ycoords]);
-                        if (coordsArr[ycoords][i] !== "") {
-                            overlapped = true;
-                            break;
-                        }
-                    }
-                }
-
-                break;
-            case 2: //north
-                bounds = ycoords - (ship.getLength() - 1);
-                if (bounds >= 0 && bounds <= 9) {
-                    for (let i = ycoords; i >= bounds; i--) {
-                        coveredCoordsArr.push([xcoords, i]);
-                        if (coordsArr[i][xcoords] !== "") {
-                            overlapped = true;
-                            break;
-                        }
-                    }
-                }
-
-                break;
-            case 3: //east
-                bounds = xcoords + ship.getLength() - 1;
-                if (bounds >= 0 && bounds <= 9) {
-                    for (let i = xcoords; i <= bounds; i++) {
-                        coveredCoordsArr.push([i, ycoords]);
-                        if (coordsArr[ycoords][i] !== "") {
-                            overlapped = true;
-                            break;
-                        }
-                    }
-                }
-
-                break;
-        }
-        // console.log(coveredCoordsArr);
-        // console.log(bounds);
-        if (bounds >= 0 && bounds <= 9 && overlapped === false) {
-            // should be validated inside switch case: bounds >= 0 && bounds <= 9
-            for (let coords of coveredCoordsArr) {
-                coordsArr[coords[1]][coords[0]] = ship; // exchange coords position, because the board is in (y,x) instead of (x,y)
+        const validObj = checkValid(ship, coords);
+        // console.log(validObj);
+        if (validObj.validity) {
+            for (let coords of validObj.coveredCoordsArr) {
+                coordsArr[coords[1]][coords[0]] = ship;
             }
             updateBoard();
             return true;
         } else {
             return false;
+        }
+    }
+
+    function checkValid(ship, coords) {
+        const xcoords = coords[0];
+        const ycoords = coords[1];
+        const length = ship.getLength();
+        const coveredCoordsArr = [];
+        const bounds = [
+            ycoords + length - 1,
+            xcoords - (length - 1),
+            ycoords - (length - 1),
+            xcoords + length - 1,
+        ];
+        const Valid = {
+            validity: true,
+            coveredCoordsArr: coveredCoordsArr,
+        };
+        const notValid = {
+            validity: false,
+        };
+        switch (ship.getPosition()) {
+            case 0: //south
+                if (checkBounds(bounds[0])) {
+                    for (let i = ycoords; i <= bounds[0]; i++) {
+                        Valid.coveredCoordsArr.push([xcoords, i]);
+                        if (coordsArr[i][xcoords] !== "") {
+                            return notValid;
+                        }
+                    }
+                    return Valid;
+                }
+                return notValid;
+            case 1: //west
+                if (checkBounds(bounds[1])) {
+                    for (let i = xcoords; i >= bounds[1]; i--) {
+                        Valid.coveredCoordsArr.push([i, ycoords]);
+                        if (coordsArr[ycoords][i] !== "") {
+                            return notValid;
+                        }
+                    }
+                    return Valid;
+                }
+                return notValid;
+            case 2: //north
+                if (checkBounds(bounds[2])) {
+                    for (let i = ycoords; i >= bounds[2]; i--) {
+                        Valid.coveredCoordsArr.push([xcoords, i]);
+                        if (coordsArr[i][xcoords] !== "") {
+                            return notValid;
+                        }
+                    }
+                    return Valid;
+                }
+                return notValid;
+            case 3: //east
+                if (checkBounds(bounds[3])) {
+                    for (let i = xcoords; i <= bounds[3]; i++) {
+                        Valid.coveredCoordsArr.push([i, ycoords]);
+                        if (coordsArr[ycoords][i] !== "") {
+                            return notValid;
+                        }
+                    }
+                    return Valid;
+                }
+                return notValid;
+        }
+    }
+
+    function checkBounds(bounds) {
+        if (bounds >= 0 && bounds <= 9) {
+            return true;
         }
     }
 

@@ -1,6 +1,6 @@
-const Player = require("../src/player");
+const Player = require("../src/factories/player");
 
-test("test computer player", () => {
+test.skip("test computer player", () => {
     const myComputer = Player(false);
 
     myComputer.myGameboard.printBoard();

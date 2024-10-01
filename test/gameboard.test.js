@@ -1,5 +1,5 @@
-const Ship = require("../src/ship");
-const Gameboard = require("../src/gameboard");
+const Ship = require("../src/factories/ship");
+const Gameboard = require("../src/factories/gameboard");
 
 test.skip("print board", () => {
     const myBoard = Gameboard();
