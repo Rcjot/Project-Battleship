@@ -1,6 +1,9 @@
 import "./style.css";
+import { gameBoardModule } from "./gameBoardDOM";
 const Player = require("./factories/player");
 
+gameBoardModule.init();
+/*
 const divGameboard = document.querySelector("#gameboard");
 const checkBoxes = document.querySelectorAll(
     ".shipPanel input[type='checkbox']"
