@@ -95,7 +95,7 @@ const Gameboard = function () {
 
             case 3: //east
                 for (let i = xcoords; i <= bounds[3]; i++) {
-                    console.log(i);
+                    // console.log(i);
                     if (checkBounds(i)) {
                         Valid.coveredCoordsArr.push([i, ycoords]);
                         if (coordsArr[ycoords][i] !== "") {

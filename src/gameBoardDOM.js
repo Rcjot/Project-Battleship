@@ -5,7 +5,8 @@ export const gameBoardModule = (function () {
     const checkBoxes = document.querySelectorAll(
         ".shipPanel input[type='checkbox']"
     );
-    console.log(checkBoxes);
+    const rotateButton = document.querySelector(".rotateBtn");
+
     const divArr = Array(10) //divArr to store all grid and have reference
         .fill(null)
         .map(() => Array(10).fill(null));
@@ -64,20 +65,21 @@ export const gameBoardModule = (function () {
                         mouseLeaveEvent(i, j, 4);
                     } else {
                     }
+                    // console.log(hoveredCell);
                 });
             }
         }
     }
 
     function mouseOverEvent(i, j, ship) {
-        console.log("test");
+        // console.log("mouseOverEvent");
         const validObj = myPlayer.myGameboard.checkValid(
             myPlayer.myGameboard.shipArr[ship],
             [j, i]
         );
 
         if (validObj.validity) {
-            console.log(validObj.coveredCoordsArr);
+            // console.log(validObj.coveredCoordsArr);
             for (let coords of validObj.coveredCoordsArr) {
                 divArr[coords[1]][coords[0]].setAttribute(
                     "style",
@@ -101,7 +103,7 @@ export const gameBoardModule = (function () {
         );
 
         if (validObj.validity) {
-            console.log(validObj.coveredCoordsArr);
+            // console.log(validObj.coveredCoordsArr);
             for (let coords of validObj.coveredCoordsArr) {
                 divArr[coords[1]][coords[0]].removeAttribute("style");
             }
@@ -112,10 +114,33 @@ export const gameBoardModule = (function () {
         }
     }
 
+    function keyBindRotateShip() {
+        rotateButton.addEventListener("click", () => {
+            rotateShip();
+        });
+    }
+
+    function rotateShip() {
+        // console.log("ship Rotated");
+        if (checkBoxes[0].checked === true) {
+            myPlayer.myGameboard.shipArr[0].rotateShip();
+        } else if (checkBoxes[1].checked === true) {
+            myPlayer.myGameboard.shipArr[1].rotateShip();
+        } else if (checkBoxes[2].checked === true) {
+            myPlayer.myGameboard.shipArr[2].rotateShip();
+        } else if (checkBoxes[3].checked === true) {
+            myPlayer.myGameboard.shipArr[3].rotateShip();
+        } else if (checkBoxes[4].checked === true) {
+            myPlayer.myGameboard.shipArr[4].rotateShip();
+        }
+    }
+
     function init() {
         initCheckBoxes();
         createBoard();
         addGridEventListeners();
+        keyBindRotateShip();
+        rotateShip();
     }
 
     return {
