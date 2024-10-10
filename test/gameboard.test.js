@@ -40,7 +40,7 @@ test.skip("recieve Attack pass array", () => {
     expect(myShip.isSunk()).toBe(true);
 });
 
-test.skip("actual gameplay test", () => {
+test("actual gameplay test", () => {
     // , place all ships, attack all, ask if all ships sunk
     const myBoard = Gameboard();
 

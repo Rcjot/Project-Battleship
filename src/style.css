@@ -11,7 +11,11 @@ body {
 button {
     cursor: pointer;
 }
-#gameboard {
+#boardContainer {
+    display: flex;
+}
+#playerBoard,
+#botBoard {
     display: grid;
     grid-template-columns: repeat(10, 50px);
     grid-template-rows: repeat(10, 50px);

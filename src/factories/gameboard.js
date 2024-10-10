@@ -143,8 +143,10 @@ const Gameboard = function () {
         if (board[x][y] === 1) {
             board[x][y] = "x";
             coordsArr[x][y].hit();
+            return true;
         } else {
             board[x][y] = "o";
+            return false;
         }
     }
 

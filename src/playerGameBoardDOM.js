@@ -1,9 +1,9 @@
 const Player = require("./factories/player");
 
-export const gameBoardDOM = (function () {
+export const playerGameBoard = (function () {
     const myPlayer = Player(true);
 
-    const divGameboard = document.querySelector("#gameboard");
+    const divGameboard = document.querySelector("#playerBoard");
     const checkBoxes = document.querySelectorAll(
         ".shipPanel input[type='checkbox']"
     );
@@ -20,6 +20,7 @@ export const gameBoardDOM = (function () {
         }
     }
 
+    //board creation
     const divArr = Array(10) //divArr to store all grid and have reference
         .fill(null)
         .map(() => Array(10).fill(null));
@@ -34,14 +35,6 @@ export const gameBoardDOM = (function () {
                 grid.setAttribute("value", `${i},${j}`);
             }
         }
-    }
-
-    function fillBotTile(coords) {
-        // bruh why are we filling bot tile
-        divArr[coords[0]][coords[1]].setAttribute(
-            "style",
-            "background-color: green"
-        );
     }
 
     function addGridEventListeners() {
@@ -118,6 +111,7 @@ export const gameBoardDOM = (function () {
                 );
             }
         }
+        updateRenderBoard();
     }
 
     function mouseLeaveEvent(i, j, ship) {
@@ -136,6 +130,7 @@ export const gameBoardDOM = (function () {
                 divArr[coords[1]][coords[0]].removeAttribute("style");
             }
         }
+        updateRenderBoard();
     }
 
     function mouseClickEvent(i, j, ship) {
@@ -146,21 +141,42 @@ export const gameBoardDOM = (function () {
 
         if (validObj.validity) {
             // console.log(validObj.coveredCoordsArr);
+            myPlayer.playerGameboard.placeShip(
+                myPlayer.playerGameboard.shipArr[ship],
+                [j, i]
+            );
             for (let coords of validObj.coveredCoordsArr) {
                 divArr[coords[1]][coords[0]].setAttribute(
                     "style",
-                    "background-color: green !important"
+                    "background-color: blue !important"
                 );
             }
+            myPlayer.playerGameboard.printBoard();
         } else {
         }
+        updateRenderBoard();
     }
 
-    function updateRenderBoard() {}
+    function updateRenderBoard() {
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                let show = myPlayer.playerGameboard.board[j][i];
+                if (show == 1) {
+                    divArr[j][i].removeAttribute("style");
+                    divArr[j][i].setAttribute(
+                        "style",
+                        "background-color: blue !important"
+                    );
+                }
+            }
+        }
+        // myPlayer.playerGameboard.printBoard();
+    }
 
     function keyBindRotateShip() {
         rotateButton.addEventListener("click", () => {
             rotateShip();
+            updateRenderBoard();
         });
     }
 
@@ -189,7 +205,5 @@ export const gameBoardDOM = (function () {
 
     return {
         init,
-        createBoard,
-        fillBotTile,
     };
 })();
