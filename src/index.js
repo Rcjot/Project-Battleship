@@ -1,5 +1,8 @@
 import "./style.css";
-import { gameBoardModule } from "./gameBoardDOM";
+import { gameBoardDOM } from "./gameBoardDOM";
+import { playerModule } from "./playerModuleDOM";
 const Player = require("./factories/player");
 
-gameBoardModule.init();
+const myAi = playerModule(false);
+
+// gameBoardDOM.init();

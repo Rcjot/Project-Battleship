@@ -1,10 +1,10 @@
 const Gameboard = require("./gameboard");
 
 const Player = function (real) {
-    const myGameboard = Gameboard();
+    const playerGameboard = Gameboard();
 
     if (!real) {
-        for (let ship of myGameboard.shipArr) {
+        for (let ship of playerGameboard.shipArr) {
             const randposition = Math.floor(Math.random() * 4);
             let randxcoord = Math.floor(Math.random() * 10);
             let randycoord = Math.floor(Math.random() * 10);
@@ -15,7 +15,7 @@ const Player = function (real) {
             // console.log(randposition);
             // console.log(coordsArr);
             // console.log(myGameboard.placeShip(ship, coordsArr));
-            while (myGameboard.placeShip(ship, coordsArr) === false) {
+            while (playerGameboard.placeShip(ship, coordsArr) === false) {
                 randxcoord = Math.floor(Math.random() * 10);
                 randycoord = Math.floor(Math.random() * 10);
                 coordsArr = [randxcoord, randycoord];
@@ -23,7 +23,7 @@ const Player = function (real) {
         }
     }
 
-    return { myGameboard };
+    return { playerGameboard };
 };
 
 module.exports = Player;

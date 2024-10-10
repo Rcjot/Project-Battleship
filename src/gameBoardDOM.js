@@ -1,16 +1,13 @@
 const Player = require("./factories/player");
 
-export const gameBoardModule = (function () {
+export const gameBoardDOM = (function () {
+    const myPlayer = Player(true);
+
     const divGameboard = document.querySelector("#gameboard");
     const checkBoxes = document.querySelectorAll(
         ".shipPanel input[type='checkbox']"
     );
     const rotateButton = document.querySelector(".rotateBtn");
-
-    const divArr = Array(10) //divArr to store all grid and have reference
-        .fill(null)
-        .map(() => Array(10).fill(null));
-    const myPlayer = Player(true);
 
     function initCheckBoxes() {
         for (let checkbox of checkBoxes) {
@@ -23,6 +20,10 @@ export const gameBoardModule = (function () {
         }
     }
 
+    const divArr = Array(10) //divArr to store all grid and have reference
+        .fill(null)
+        .map(() => Array(10).fill(null));
+
     function createBoard() {
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
@@ -33,6 +34,14 @@ export const gameBoardModule = (function () {
                 grid.setAttribute("value", `${i},${j}`);
             }
         }
+    }
+
+    function fillBotTile(coords) {
+        // bruh why are we filling bot tile
+        divArr[coords[0]][coords[1]].setAttribute(
+            "style",
+            "background-color: green"
+        );
     }
 
     function addGridEventListeners() {
@@ -73,8 +82,8 @@ export const gameBoardModule = (function () {
 
     function mouseOverEvent(i, j, ship) {
         // console.log("mouseOverEvent");
-        const validObj = myPlayer.myGameboard.checkValid(
-            myPlayer.myGameboard.shipArr[ship],
+        const validObj = myPlayer.playerGameboard.checkValid(
+            myPlayer.playerGameboard.shipArr[ship],
             [j, i]
         );
 
@@ -97,8 +106,8 @@ export const gameBoardModule = (function () {
     }
 
     function mouseLeaveEvent(i, j, ship) {
-        const validObj = myPlayer.myGameboard.checkValid(
-            myPlayer.myGameboard.shipArr[ship],
+        const validObj = myPlayer.playerGameboard.checkValid(
+            myPlayer.playerGameboard.shipArr[ship],
             [j, i]
         );
 
@@ -123,15 +132,15 @@ export const gameBoardModule = (function () {
     function rotateShip() {
         // console.log("ship Rotated");
         if (checkBoxes[0].checked === true) {
-            myPlayer.myGameboard.shipArr[0].rotateShip();
+            myPlayer.playerGameboard.shipArr[0].rotateShip();
         } else if (checkBoxes[1].checked === true) {
-            myPlayer.myGameboard.shipArr[1].rotateShip();
+            myPlayer.playerGameboard.shipArr[1].rotateShip();
         } else if (checkBoxes[2].checked === true) {
-            myPlayer.myGameboard.shipArr[2].rotateShip();
+            myPlayer.playerGameboard.shipArr[2].rotateShip();
         } else if (checkBoxes[3].checked === true) {
-            myPlayer.myGameboard.shipArr[3].rotateShip();
+            myPlayer.playerGameboard.shipArr[3].rotateShip();
         } else if (checkBoxes[4].checked === true) {
-            myPlayer.myGameboard.shipArr[4].rotateShip();
+            myPlayer.playerGameboard.shipArr[4].rotateShip();
         }
     }
 
@@ -145,5 +154,7 @@ export const gameBoardModule = (function () {
 
     return {
         init,
+        createBoard,
+        fillBotTile,
     };
 })();

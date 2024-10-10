@@ -21,7 +21,7 @@ const Gameboard = function () {
 
     function placeShip(ship, coords) {
         const validObj = checkValid(ship, coords);
-        console.log(validObj);
+        // console.log(validObj);
         if (validObj.validity) {
             for (let coords of validObj.coveredCoordsArr) {
                 coordsArr[coords[1]][coords[0]] = ship;
@@ -163,6 +163,7 @@ const Gameboard = function () {
         shipArr,
         checkAllShipsSunk,
         checkValid,
+        board,
     };
 };
 

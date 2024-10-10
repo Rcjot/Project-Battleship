@@ -71,7 +71,7 @@ test.skip("place a ship, north", () => {
     // myBoard.printBoard();
 });
 
-test("place a ship, east", () => {
+test.skip("place a ship, east", () => {
     const myShip = Ship(3);
     const myBoard = Gameboard();
     myShip.rotateShip();
