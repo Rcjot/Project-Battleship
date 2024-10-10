@@ -4,7 +4,7 @@ export const botGameBoard = (function () {
     const myBot = Player(false);
 
     const divGameboard = document.querySelector("#botBoard");
-
+    myBot.playerGameboard.printBoard();
     const divArr = Array(10) //divArr to store all grid and have reference
         .fill(null)
         .map(() => Array(10).fill(null));

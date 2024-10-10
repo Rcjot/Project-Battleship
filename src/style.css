@@ -13,6 +13,7 @@ button {
 }
 #boardContainer {
     display: flex;
+    gap: 100px;
 }
 #playerBoard,
 #botBoard {

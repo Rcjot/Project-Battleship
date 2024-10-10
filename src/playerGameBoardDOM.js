@@ -145,6 +145,8 @@ export const playerGameBoard = (function () {
                 myPlayer.playerGameboard.shipArr[ship],
                 [j, i]
             );
+            checkBoxes[ship].checked = false;
+            checkBoxes[ship].disabled = true;
             for (let coords of validObj.coveredCoordsArr) {
                 divArr[coords[1]][coords[0]].setAttribute(
                     "style",
@@ -176,7 +178,6 @@ export const playerGameBoard = (function () {
     function keyBindRotateShip() {
         rotateButton.addEventListener("click", () => {
             rotateShip();
-            updateRenderBoard();
         });
     }
 
