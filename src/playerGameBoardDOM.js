@@ -196,6 +196,13 @@ export const playerGameBoard = (function () {
         }
     }
 
+    function checkAllShipsPlaced() {
+        checkBoxes.forEach((checkbox) => {
+            if (checkbox.disabled === false) return false;
+            return true;
+        });
+    }
+
     function init() {
         initCheckBoxes();
         createBoard();
@@ -206,5 +213,6 @@ export const playerGameBoard = (function () {
 
     return {
         init,
+        checkAllShipsPlaced,
     };
 })();

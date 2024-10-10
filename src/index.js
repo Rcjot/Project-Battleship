@@ -1,8 +1,8 @@
 import "./style.css";
-import { playerModule } from "./playerModuleDOM";
+import { playerInit } from "./playerInitDOM";
 
-playerModule(true);
-playerModule(false);
+playerInit(true);
+playerInit(false);
 
 // const myAi = playerModule(false);
 
