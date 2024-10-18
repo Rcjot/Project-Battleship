@@ -1,6 +1,6 @@
 const Player = require("./factories/player");
 
-export const botGameBoard = (function () {
+export const botGameBoard = function () {
     const myBot = Player(false);
 
     const divGameboard = document.querySelector("#botBoard");
@@ -43,4 +43,4 @@ export const botGameBoard = (function () {
     return {
         init,
     };
-})();
+};

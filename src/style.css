@@ -6,11 +6,16 @@
 body {
     min-height: 100vh;
     max-height: 100vh;
-    padding: 100px;
 }
 button {
     cursor: pointer;
 }
+#gameScreen {
+    min-height: inherit;
+    min-width: 100vw;
+    padding: 100px;
+}
+
 #boardContainer {
     display: flex;
     gap: 100px;

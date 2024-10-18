@@ -1,9 +1,11 @@
 import "./style.css";
-import { playerInit } from "./playerInitDOM";
+import { gameStates } from "./DOM/gameStateDOM";
+import { playerGameBoard } from "./DOM/playerBoard/playerGameBoardDOM";
 
-playerInit(true);
-playerInit(false);
-
+// gameStates.gameStart();
 // const myAi = playerModule(false);
 
 // gameBoardDOM.init();
+const myBoard = playerGameBoard();
+
+myBoard.startOfGame.init();
