@@ -27,9 +27,13 @@ export const botGameBoard = function () {
                 divArr[i][j].addEventListener("click", () => {
                     if (myBot.playerGameboard.recieveAttack([j, i])) {
                         divArr[i][j].textContent = "hit";
+                        divArr[i][j].disabled = true;
                     } else {
                         divArr[i][j].textContent = "nohit";
+                        divArr[i][j].disabled = true;
                     }
+                    const event = new Event("clickedBotTile");
+                    document.dispatchEvent(event);
                 });
             }
         }

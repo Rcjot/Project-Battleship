@@ -69,6 +69,7 @@ export const playerGameBoard = function () {
                     const event = new Event("createBotBoard");
                     document.dispatchEvent(event);
                     botCreated = true;
+                    this.nextPhase();
                 }
             });
         },
@@ -98,6 +99,11 @@ export const playerGameBoard = function () {
                             "background-color: yellow"
                         );
                     }
+                    if (myPlayer.playerGameboard.board[j][i] === "x") {
+                        this.divArr[j][i].textContent = "hit";
+                    } else if (myPlayer.playerGameboard.board[j][i] === "o") {
+                        this.divArr[j][i].textContent = "nohit";
+                    }
                 }
             }
         },
@@ -105,6 +111,10 @@ export const playerGameBoard = function () {
             divGameboard.innerHTML = "";
             this.createBoard();
             this.renderBoard();
+            document.addEventListener("recievedAttack", () => {
+                this.renderBoard();
+                myPlayer.playerGameboard.printBoard();
+            });
         },
     };
 
@@ -138,9 +148,27 @@ export const playerGameBoard = function () {
         },
     };
 
+    function checkHitByBot(randx, randy) {
+        // return;
+        if (myPlayer.playerGameboard.board[randx][randy] !== ".") return true;
+    }
+
+    function recieveAttack(randx, randy) {
+        if (myPlayer.playerGameboard.checkTile([randx, randy])) {
+            console.log("goes here!");
+            myPlayer.playerGameboard.recieveAttack([randx, randy]);
+            const event = new Event("recievedAttack");
+            document.dispatchEvent(event);
+            return true;
+        }
+        return false;
+    }
+
     return {
         beforeGame,
         duringGameVSPlayer,
         duringGameVSBot,
+        checkHitByBot,
+        recieveAttack,
     };
 };

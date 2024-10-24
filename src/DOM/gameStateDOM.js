@@ -30,6 +30,19 @@ export const gameStates = (function () {
             myBot.init();
         });
 
+        document.addEventListener("clickedBotTile", () => {
+            let randx = Math.floor(Math.random() * 10);
+            let randy = Math.floor(Math.random() * 10);
+            while (!myPlayer.recieveAttack(randx, randy)) {
+                console.log("HEY");
+                randx = Math.floor(Math.random() * 10);
+                randy = Math.floor(Math.random() * 10);
+                console.log(randx, randy);
+            }
+
+            console.log(randx, randy);
+        });
+
         // while (gameFlow.getBoardComplete) {}
     }
 

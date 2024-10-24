@@ -9,7 +9,7 @@ const Gameboard = function () {
         .map(() =>
             Array(10)
                 .fill(null)
-                .map(() => ["."])
+                .map(() => ".")
         );
     const coordsArr = Array(10)
         .fill(null)
@@ -139,7 +139,6 @@ const Gameboard = function () {
     function recieveAttack(coords) {
         const y = coords[0];
         const x = coords[1];
-
         if (board[x][y] === 1) {
             board[x][y] = "x";
             coordsArr[x][y].hit();
@@ -148,6 +147,15 @@ const Gameboard = function () {
             board[x][y] = "o";
             return false;
         }
+    }
+
+    function checkTile(coords) {
+        const y = coords[0];
+        const x = coords[1];
+        if (board[x][y] === "o" || board[x][y] === "x") {
+            return false;
+        }
+        return true;
     }
 
     function checkAllShipsSunk() {
@@ -166,6 +174,7 @@ const Gameboard = function () {
         checkAllShipsSunk,
         checkValid,
         board,
+        checkTile,
     };
 };
 
