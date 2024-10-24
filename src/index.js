@@ -8,4 +8,8 @@ import { playerGameBoard } from "./DOM/playerBoard/playerGameBoardDOM";
 // gameBoardDOM.init();
 const myBoard = playerGameBoard();
 
-myBoard.startOfGame.init();
+// myBoard.beforeGame.init();
+
+gameStates.vsBotGame();
+
+// gameStates.gameStart();

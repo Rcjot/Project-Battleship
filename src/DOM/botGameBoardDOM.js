@@ -1,4 +1,4 @@
-const Player = require("./factories/player");
+const Player = require("../factories/player");
 
 export const botGameBoard = function () {
     const myBot = Player(false);

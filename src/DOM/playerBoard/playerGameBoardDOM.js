@@ -1,5 +1,6 @@
 const Player = require("../../factories/player");
 import { gridEventListeners } from "./gridEventListeners";
+import { gameFlow } from "../../gameFlow";
 
 export const playerGameBoard = function () {
     const myPlayer = Player(true);
@@ -48,28 +49,98 @@ export const playerGameBoard = function () {
             }
         },
         checkAllShipsPlaced: function () {
-            this.checkBoxes.forEach((checkbox) => {
-                if (checkbox.disabled === false) return false;
-                return true;
-            });
+            for (let i = 0; i < this.checkBoxes.length; i++) {
+                if (this.checkBoxes[i].disabled === false) return false;
+            }
+            return true;
+        },
+        nextPhase: function () {
+            // gameFlow.setBoardComplete();
+            duringGameVSBot.init();
         },
         init: function () {
             this.initCheckBoxes();
             this.createModifyBoard();
             this.addGridEventListeners();
             this.gridEventListeners.keyBindRotateShip(this.checkBoxes);
+            let botCreated = false;
+            document.addEventListener("checkShips", () => {
+                if (this.checkAllShipsPlaced() && !botCreated) {
+                    const event = new Event("createBotBoard");
+                    document.dispatchEvent(event);
+                    botCreated = true;
+                }
+            });
         },
     };
 
-    const duringGameRun = {
+    const duringGameVSBot = {
         divArr: Array(10) //divArr to store all grid and have reference
             .fill(null)
             .map(() => Array(10).fill(null)),
-        createBoard: function () {},
+        createBoard: function () {
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    const grid = document.createElement("button");
+                    divGameboard.append(grid);
+                    this.divArr[i][j] = grid;
+                    grid.setAttribute("id", "tile");
+                    grid.setAttribute("value", `${i},${j}`);
+                }
+            }
+        },
+        renderBoard: function () {
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    if (myPlayer.playerGameboard.board[j][i] === 1) {
+                        this.divArr[j][i].setAttribute(
+                            "style",
+                            "background-color: yellow"
+                        );
+                    }
+                }
+            }
+        },
+        init: function () {
+            divGameboard.innerHTML = "";
+            this.createBoard();
+            this.renderBoard();
+        },
+    };
+
+    const duringGameVSPlayer = {
+        divArr: Array(10) //divArr to store all grid and have reference
+            .fill(null)
+            .map(() => Array(10).fill(null)),
+        createBoard: function () {
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    const grid = document.createElement("button");
+                    divGameboard.append(grid);
+                    this.divArr[i][j] = grid;
+                    grid.setAttribute("id", "tile");
+                    grid.setAttribute("value", `${i},${j}`);
+                }
+            }
+        },
+        addGridEventListeners: function () {
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    divArr[i][j].addEventListener("click", () => {
+                        if (myPlayer.playerGameboard.recieveAttack([j, i])) {
+                            divArr[i][j].textContent = "hit";
+                        } else {
+                            divArr[i][j].textContent = "nohit";
+                        }
+                    });
+                }
+            }
+        },
     };
 
     return {
-        startOfGame: beforeGame,
-        duringGameRun,
+        beforeGame,
+        duringGameVSPlayer,
+        duringGameVSBot,
     };
 };

@@ -1,3 +1,7 @@
+import { botGameBoard } from "./botGameBoardDOM";
+import { playerGameBoard } from "./playerBoard/playerGameBoardDOM";
+import { gameFlow } from "../gameFlow";
+
 export const gameStates = (function () {
     function gameStart() {
         const gameScreen = document.querySelector("#gameScreen");
@@ -12,8 +16,23 @@ export const gameStates = (function () {
         gameScreen.append(vsPlayerBtn);
         gameScreen.append(vsBotBtn);
 
+        vsBotBtn.addEventListener("click", () => {
+            vsBotGame();
+        });
         vsPlayerBtn.addEventListener("click", () => {});
     }
+
+    function vsBotGame() {
+        const myPlayer = playerGameBoard();
+        const myBot = botGameBoard();
+        myPlayer.beforeGame.init();
+        document.addEventListener("createBotBoard", () => {
+            myBot.init();
+        });
+
+        // while (gameFlow.getBoardComplete) {}
+    }
+
     function modifyBoard(Player) {
         const gameScreen = document.querySelector("#gameScreen");
         gameScreen.innerHTML = "";
@@ -25,6 +44,7 @@ export const gameStates = (function () {
 
     return {
         gameStart,
+        vsBotGame,
         modifyBoard,
         gameRun,
         gameEnd,

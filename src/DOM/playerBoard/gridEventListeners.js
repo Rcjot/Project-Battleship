@@ -45,6 +45,8 @@ export const gridEventListeners = function (myPlayer) {
                 mouseClickEvent(i, j, 4, divArr, checkBoxes);
             } else {
             }
+            const event = new Event("checkShips");
+            document.dispatchEvent(event);
         });
     }
 
@@ -116,6 +118,7 @@ export const gridEventListeners = function (myPlayer) {
             myPlayer.playerGameboard.printBoard();
         } else {
         }
+
         updateRenderBoard(divArr);
     }
 

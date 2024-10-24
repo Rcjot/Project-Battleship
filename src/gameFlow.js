@@ -1,9 +1,26 @@
 import { playerInit } from "./DOM/playerInitDOM";
 
 export const gameFlow = (function () {
-    // we need to work on this
-    // playerInit(true);
-    // playerInit(false);
+    let playerCreatingBoard = true;
+
+    function setBoardComplete() {
+        playerCreatingBoard = false;
+    }
+
+    function getBoardComplete() {
+        return playerCreatingBoard;
+    }
+
+    const playerVsBot = {};
+
+    const playerVsPlayer = {};
+
+    return {
+        setBoardComplete,
+        getBoardComplete,
+        playerVsBot,
+        playerVsPlayer,
+    };
 })();
 
 /**
