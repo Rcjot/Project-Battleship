@@ -2,7 +2,6 @@ const Player = require("../factories/player");
 
 export const botGameBoard = function () {
     const myBot = Player(false);
-
     const divGameboard = document.querySelector("#botBoard");
     myBot.playerGameboard.printBoard();
     const divArr = Array(10) //divArr to store all grid and have reference
@@ -39,12 +38,26 @@ export const botGameBoard = function () {
         }
     }
 
+    function disableButtons() {
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                divArr[i][j].disabled = true;
+            }
+        }
+    }
+
     function init() {
         createBoard();
         addGridEventListeners();
     }
 
+    function checkAllShipsSunk() {
+        return myBot.playerGameboard.checkAllShipsSunk();
+    }
+
     return {
         init,
+        checkAllShipsSunk,
+        disableButtons,
     };
 };

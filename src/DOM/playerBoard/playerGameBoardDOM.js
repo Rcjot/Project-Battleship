@@ -148,11 +148,6 @@ export const playerGameBoard = function () {
         },
     };
 
-    function checkHitByBot(randx, randy) {
-        // return;
-        if (myPlayer.playerGameboard.board[randx][randy] !== ".") return true;
-    }
-
     function recieveAttack(randx, randy) {
         if (myPlayer.playerGameboard.checkTile([randx, randy])) {
             console.log("goes here!");
@@ -164,11 +159,15 @@ export const playerGameBoard = function () {
         return false;
     }
 
+    function checkAllShipsSunk() {
+        return myPlayer.playerGameboard.checkAllShipsSunk();
+    }
+
     return {
         beforeGame,
         duringGameVSPlayer,
         duringGameVSBot,
-        checkHitByBot,
         recieveAttack,
+        checkAllShipsSunk,
     };
 };
