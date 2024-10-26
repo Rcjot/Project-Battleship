@@ -54,9 +54,13 @@ export const playerGameBoard = function () {
             }
             return true;
         },
-        nextPhase: function () {
+        nextPhase: function (bool = false) {
             // gameFlow.setBoardComplete();
-            duringGameVSBot.init();
+            if (bool) {
+                duringGameVSPlayer.init();
+            } else {
+                duringGameVSBot.init();
+            }
         },
         init: function () {
             this.initCheckBoxes();
@@ -69,7 +73,6 @@ export const playerGameBoard = function () {
                     const event = new Event("createBotBoard");
                     document.dispatchEvent(event);
                     botCreated = true;
-                    this.nextPhase();
                 }
             });
         },

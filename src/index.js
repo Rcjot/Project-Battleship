@@ -10,6 +10,7 @@ const myBoard = playerGameBoard();
 
 // myBoard.beforeGame.init();
 
-gameStates.vsBotGame();
-
 // gameStates.gameStart();
+
+// gameStates.vsBotGame();
+gameStates.vsPlayerGame();

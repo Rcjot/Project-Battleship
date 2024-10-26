@@ -19,7 +19,9 @@ export const gameStates = (function () {
         vsBotBtn.addEventListener("click", () => {
             vsBotGame();
         });
-        vsPlayerBtn.addEventListener("click", () => {});
+        vsPlayerBtn.addEventListener("click", () => {
+            vsPlayerGame();
+        });
     }
 
     function vsBotGame() {
@@ -27,6 +29,7 @@ export const gameStates = (function () {
         const myBot = botGameBoard();
         myPlayer.beforeGame.init();
         document.addEventListener("createBotBoard", () => {
+            myPlayer.beforeGame.nextPhase();
             myBot.init();
         });
 
@@ -40,7 +43,7 @@ export const gameStates = (function () {
                     randy = Math.floor(Math.random() * 10);
                     console.log(randx, randy);
                 }
-
+                // put smart bot algo here
                 console.log(randx, randy);
             } else {
                 const event = new Event("gameOver");
@@ -55,20 +58,30 @@ export const gameStates = (function () {
         // while (gameFlow.getBoardComplete) {}
     }
 
-    function modifyBoard(Player) {
-        const gameScreen = document.querySelector("#gameScreen");
-        gameScreen.innerHTML = "";
+    function vsPlayerGame() {
+        let gameBoardFinishedCnt = 0;
+        const myPlayer = playerGameBoard();
+        const myPlayer2 = playerGameBoard();
 
-        Player.createBoard();
+        myPlayer.beforeGame.init();
+
+        document.addEventListener("createBotBoard", () => {
+            gameBoardFinishedCnt++;
+            if (gameBoardFinishedCnt === 2) {
+                myPlayer.beforeGame.nextPhase(true);
+                myPlayer2.beforeGame.nextPhase(true);
+            } else {
+                myPlayer2.beforeGame.init();
+            }
+        });
     }
-    function gameRun() {}
+
     function gameEnd() {}
 
     return {
         gameStart,
         vsBotGame,
-        modifyBoard,
-        gameRun,
+        vsPlayerGame,
         gameEnd,
     };
 })();
