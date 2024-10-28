@@ -3,8 +3,9 @@ import { playerGameBoard } from "./playerBoard/playerGameBoardDOM";
 import { gameFlow } from "../gameFlow";
 
 export const gameStates = (function () {
+    const gameScreen = document.querySelector("#gameScreen");
+
     function gameStart() {
-        const gameScreen = document.querySelector("#gameScreen");
         gameScreen.innerHTML = "";
         const titleDiv = document.createElement("div");
         titleDiv.textContent = "Battle Ship";
@@ -25,6 +26,8 @@ export const gameStates = (function () {
     }
 
     function vsBotGame() {
+        gameScreen.innerHTML = "";
+
         const myPlayer = playerGameBoard();
         const myBot = botGameBoard();
         myPlayer.beforeGame.init();
