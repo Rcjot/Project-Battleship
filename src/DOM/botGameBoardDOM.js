@@ -2,7 +2,13 @@ const Player = require("../factories/player");
 
 export const botGameBoard = function () {
     const myBot = Player(false);
-    const divGameboard = document.querySelector("#botBoard");
+    const gameScreen = document.querySelector("#gameScreen");
+    const player2Board = document.createElement("div");
+    const botBoard = document.createElement("div");
+    gameScreen.append(player2Board);
+    player2Board.append(botBoard);
+    player2Board.classList.add("player2");
+    botBoard.setAttribute("id", "botBoard");
     myBot.playerGameboard.printBoard();
     const divArr = Array(10) //divArr to store all grid and have reference
         .fill(null)
@@ -12,7 +18,7 @@ export const botGameBoard = function () {
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
                 const grid = document.createElement("button");
-                divGameboard.append(grid);
+                botBoard.append(grid);
                 divArr[i][j] = grid;
                 grid.setAttribute("id", "tile");
                 grid.setAttribute("value", `${i},${j}`);

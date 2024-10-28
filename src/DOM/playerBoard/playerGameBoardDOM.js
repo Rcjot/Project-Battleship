@@ -5,17 +5,39 @@ import { gameFlow } from "../../gameFlow";
 export const playerGameBoard = function () {
     const myPlayer = Player(true);
 
-    const divGameboard = document.querySelector("#playerBoard");
+    const gameScreen = document.querySelector("#gameScreen");
+    const player1Board = document.createElement("div");
+    const boardContainer = document.createElement("div");
+    const playerBoard = document.createElement("div");
+    const shipPanel = document.createElement("div");
+    gameScreen.append(player1Board);
+    player1Board.append(boardContainer);
+    boardContainer.append(shipPanel);
+    boardContainer.append(playerBoard);
+    playerBoard.setAttribute("id", "playerBoard");
 
     const beforeGame = {
-        checkBoxes: document.querySelectorAll(
-            ".shipPanel input[type='checkbox']"
-        ),
+        // checkBoxes: document.querySelectorAll(
+        //     ".shipPanel input[type='checkbox']"
+        // ),
+        checkBoxes: Array(5)
+            .fill(null)
+            .map((_, i) => {
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.id = `btn${i + 1}`;
+                checkbox.value = i + 1;
+
+                return checkbox;
+            }),
         gridEventListeners: gridEventListeners(myPlayer),
         divArr: Array(10) //divArr to store all grid and have reference
             .fill(null)
             .map(() => Array(10).fill(null)),
         initCheckBoxes: function () {
+            const rotateBtn = document.createElement("button");
+            rotateBtn.classList.add("rotateBtn");
+            rotateBtn.textContent = "R";
             for (let checkbox of this.checkBoxes) {
                 // checkBox, only check one
                 checkbox.addEventListener("change", () => {
@@ -23,13 +45,15 @@ export const playerGameBoard = function () {
                         if (checkbox !== item) item.checked = false;
                     });
                 });
+                shipPanel.append(checkbox);
             }
+            shipPanel.append(rotateBtn);
         },
         createModifyBoard: function () {
             for (let i = 0; i < 10; i++) {
                 for (let j = 0; j < 10; j++) {
                     const grid = document.createElement("button");
-                    divGameboard.append(grid);
+                    playerBoard.append(grid);
                     this.divArr[i][j] = grid;
                     grid.setAttribute("id", "tile");
                     grid.setAttribute("value", `${i},${j}`);
@@ -86,7 +110,7 @@ export const playerGameBoard = function () {
             for (let i = 0; i < 10; i++) {
                 for (let j = 0; j < 10; j++) {
                     const grid = document.createElement("button");
-                    divGameboard.append(grid);
+                    playerBoard.append(grid);
                     this.divArr[i][j] = grid;
                     grid.setAttribute("id", "tile");
                     grid.setAttribute("value", `${i},${j}`);
@@ -111,7 +135,8 @@ export const playerGameBoard = function () {
             }
         },
         init: function () {
-            divGameboard.innerHTML = "";
+            shipPanel.innerHTML = "";
+            playerBoard.innerHTML = "";
             this.createBoard();
             this.renderBoard();
             document.addEventListener("recievedAttack", () => {
@@ -129,7 +154,7 @@ export const playerGameBoard = function () {
             for (let i = 0; i < 10; i++) {
                 for (let j = 0; j < 10; j++) {
                     const grid = document.createElement("button");
-                    divGameboard.append(grid);
+                    playerBoard.append(grid);
                     this.divArr[i][j] = grid;
                     grid.setAttribute("id", "tile");
                     grid.setAttribute("value", `${i},${j}`);

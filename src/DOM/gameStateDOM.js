@@ -62,6 +62,8 @@ export const gameStates = (function () {
     }
 
     function vsPlayerGame() {
+        gameScreen.innerHTML = "";
+
         let gameBoardFinishedCnt = 0;
         const myPlayer = playerGameBoard();
         const myPlayer2 = playerGameBoard();
