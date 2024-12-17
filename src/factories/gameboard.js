@@ -152,6 +152,7 @@ const Gameboard = function () {
     function checkTile(coords) {
         const y = coords[0];
         const x = coords[1];
+        if (y < 0 || y > 9 || x < 0 || x > 9) return false;
         if (board[x][y] === "o" || board[x][y] === "x") {
             return false;
         }

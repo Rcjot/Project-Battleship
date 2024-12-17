@@ -177,8 +177,14 @@ export const playerGameBoard = function () {
     };
 
     function recieveAttack(randx, randy) {
+        // recieve??? wrong spelling
         if (myPlayer.playerGameboard.checkTile([randx, randy])) {
             console.log("goes here!");
+            console.log(
+                randx,
+                randy,
+                myPlayer.playerGameboard.checkTile([randx, randy])
+            );
             myPlayer.playerGameboard.recieveAttack([randx, randy]);
             const event = new Event("recievedAttack");
             document.dispatchEvent(event);
@@ -191,11 +197,21 @@ export const playerGameBoard = function () {
         return myPlayer.playerGameboard.checkAllShipsSunk();
     }
 
+    function checkCoordIfHit(coords) {
+        if (coords[0] < 0 || coords[0] > 9 || coords[1] < 0 || coords[1] > 9)
+            return false;
+
+        if (myPlayer.playerGameboard.board[coords[1]][coords[0]] === "x")
+            return true;
+        return false;
+    }
+
     return {
         beforeGame,
         duringGameVSPlayer,
         duringGameVSBot,
         recieveAttack,
         checkAllShipsSunk,
+        checkCoordIfHit,
     };
 };
