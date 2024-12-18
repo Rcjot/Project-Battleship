@@ -32,7 +32,6 @@ export const gameStates = (function () {
         myPlayer.beforeGame.init();
         let previousAttack = null;
         let smartBotAttack = false;
-        let toStack = false;
         const toAttackStack = [];
         document.addEventListener("createBotBoard", () => {
             myPlayer.beforeGame.nextPhase();
@@ -130,7 +129,10 @@ export const gameStates = (function () {
                         }
                     }
                 }
-
+                if (myBot.checkAllShipsSunk() || myPlayer.checkAllShipsSunk()) {
+                    const event = new Event("gameOver");
+                    document.dispatchEvent(event);
+                }
                 // put smart bot algo here
             }
         });
