@@ -1,13 +1,9 @@
 import { botGameBoard } from "./botGameBoardDOM";
 import { playerGameBoard } from "./playerBoard/playerGameBoardDOM";
 import { gameFlow } from "../gameFlow";
-const myQueue = require("./Queue");
 export const gameStates = (function () {
     const gameScreen = document.querySelector("#gameScreen");
-    let previousAttack = null;
-    let smartBotAttack = false;
-    let toStack = false;
-    const toAttackQueue = new myQueue();
+
     function gameStart() {
         gameScreen.innerHTML = "";
         const titleDiv = document.createElement("div");
@@ -28,45 +24,46 @@ export const gameStates = (function () {
         });
     }
 
-    function doRandomAttack(myPlayer) {
-        let randx = Math.floor(Math.random() * 10);
-        let randy = Math.floor(Math.random() * 10);
-        while (!myPlayer.recieveAttack(randx, randy)) {
-            console.log("HEY");
-            randx = Math.floor(Math.random() * 10);
-            randy = Math.floor(Math.random() * 10);
-            console.log(randx, randy);
-        }
-        previousAttack = [randx, randy];
-        if (myPlayer.checkCoordIfHit(previousAttack)) {
-            console.log("hit!!!!!!!!!");
-            smartBotAttack = true;
-            const posAttacksArr = [
-                [randx - 1, randy, 0],
-                [randx + 1, randy, 1],
-                [randx, randy - 1, 2],
-                [randx, randy + 1, 3],
-            ];
-
-            for (let a of posAttacksArr) {
-                toAttackQueue.enqueue(a);
-            }
-            console.log(smartBotAttack);
-            console.log(toAttackQueue.stack2);
-            console.log(toAttackQueue.stack1);
-        }
-    }
-
     function vsBotGame() {
         gameScreen.innerHTML = "";
 
         const myPlayer = playerGameBoard();
         const myBot = botGameBoard();
         myPlayer.beforeGame.init();
+        let previousAttack = null;
+        let smartBotAttack = false;
+        let toStack = false;
+        const toAttackStack = [];
         document.addEventListener("createBotBoard", () => {
             myPlayer.beforeGame.nextPhase();
             myBot.init();
         });
+        function doRandomAttack() {
+            let randx = Math.floor(Math.random() * 10);
+            let randy = Math.floor(Math.random() * 10);
+            while (!myPlayer.recieveAttack(randx, randy)) {
+                console.log("HEY");
+                randx = Math.floor(Math.random() * 10);
+                randy = Math.floor(Math.random() * 10);
+                console.log(randx, randy);
+            }
+            previousAttack = [randx, randy];
+            if (myPlayer.checkCoordIfHit(previousAttack)) {
+                console.log("hit!!!!!!!!!");
+                console.log("smartbotattack  is going to activate!");
+                smartBotAttack = true;
+                const posAttacksArr = [
+                    [randx - 1, randy, 0],
+                    [randx + 1, randy, 1],
+                    [randx, randy - 1, 2],
+                    [randx, randy + 1, 3],
+                ];
+
+                for (let a of posAttacksArr) {
+                    toAttackStack.push(a);
+                }
+            }
+        }
 
         document.addEventListener("clickedBotTile", () => {
             if (myBot.checkAllShipsSunk() || myPlayer.checkAllShipsSunk()) {
@@ -74,162 +71,62 @@ export const gameStates = (function () {
                 document.dispatchEvent(event);
             } else {
                 if (!smartBotAttack) {
-                    doRandomAttack(myPlayer);
+                    console.log("did random because not smartbot");
+                    doRandomAttack();
                 } else {
-                    console.log("smartbot activated!!");
-                    if (toStack) {
-                        console.log("to Stack");
-                        console.log(toAttackQueue.stack1, 1);
-                        let AttackDq = toAttackQueue.myPop();
-                        let [x, y] = AttackDq;
-                        let dontpass = true;
-                        while (!myPlayer.recieveAttack(x, y) && dontpass) {
-                            if (!toAttackQueue.isEmpty()) {
-                                console.log(toAttackQueue.stack1, 2);
-                                AttackDq = toAttackQueue.myPop();
-                                console.log(toAttackQueue.stack1, 3);
+                    if (toAttackStack.length === 0) {
+                        smartBotAttack = false;
+                        doRandomAttack();
+                        console.log("did random because stack is empty");
+                        return;
+                    }
+                    let AttackDq = toAttackStack.pop();
+                    let [x, y] = AttackDq;
+                    let recievedYes = myPlayer.recieveAttack(x, y);
+                    while (!recievedYes && toAttackStack.length != 0) {
+                        AttackDq = toAttackStack.pop();
+                        [x, y] = AttackDq;
+                        recievedYes = myPlayer.recieveAttack(x, y);
+                    }
 
-                                [x, y] = AttackDq;
-                            } else {
-                                console.log("dont passsssssssssssssssed");
-                                dontpass = false;
-                            }
-                        }
-                        console.log(toAttackQueue.stack1, "before enqueue");
-
-                        if (dontpass) {
-                            previousAttack = [x, y];
-
-                            if (myPlayer.checkCoordIfHit(previousAttack)) {
-                                toAttackQueue.myPop();
-                                switch (AttackDq[2]) {
-                                    case 0:
-                                        toAttackQueue.enqueue([
-                                            AttackDq[0] - 1,
-                                            AttackDq[1],
-                                            0,
-                                        ]);
-                                        break;
-                                    case 1:
-                                        toAttackQueue.enqueue([
-                                            AttackDq[0] + 1,
-                                            AttackDq[1],
-                                            1,
-                                        ]);
-                                        break;
-                                    case 2:
-                                        toAttackQueue.enqueue([
-                                            AttackDq[0],
-                                            AttackDq[1] - 1,
-                                            2,
-                                        ]);
-                                        break;
-                                    case 3:
-                                        toAttackQueue.enqueue([
-                                            AttackDq[0],
-                                            AttackDq[1] + 1,
-                                            3,
-                                        ]);
-                                        break;
-                                }
-                            } else {
-                                if (toAttackQueue.isEmpty()) {
-                                    smartBotAttack = false;
-                                    toStack = false;
-                                    toAttackQueue.clear();
-                                }
-                            }
-                        } else {
-                            console.log(dontpass, "dont pass");
-                            doRandomAttack(myPlayer);
-                            smartBotAttack = false;
-                            toStack = false;
-                            toAttackQueue.clear();
-                        }
-                        console.log(toAttackQueue.stack1, "after enqueue");
+                    if (!recievedYes) {
+                        console.log("did random because not yes");
+                        smartBotAttack = false;
+                        doRandomAttack();
                     } else {
-                        if (!toAttackQueue.isEmpty()) {
-                            console.log("not to stack");
-                            let AttackDq = toAttackQueue.dequeue();
-                            console.log(AttackDq);
-                            let [x, y] = AttackDq;
-                            let dontpass = true;
-                            while (!myPlayer.recieveAttack(x, y) && dontpass) {
-                                if (!toAttackQueue.isEmpty()) {
-                                    AttackDq = toAttackQueue.dequeue();
-                                    [x, y] = AttackDq;
-                                } else {
-                                    console.log("dont passsssssssssssssssed");
-                                    dontpass = false;
-                                }
+                        previousAttack = [x, y];
+                        console.log(AttackDq);
+                        if (myPlayer.checkCoordIfHit(previousAttack)) {
+                            switch (AttackDq[2]) {
+                                case 0:
+                                    toAttackStack.push([
+                                        AttackDq[0] - 1,
+                                        AttackDq[1],
+                                        0,
+                                    ]);
+                                    break;
+                                case 1:
+                                    toAttackStack.push([
+                                        AttackDq[0] + 1,
+                                        AttackDq[1],
+                                        1,
+                                    ]);
+                                    break;
+                                case 2:
+                                    toAttackStack.push([
+                                        AttackDq[0],
+                                        AttackDq[1] - 1,
+                                        2,
+                                    ]);
+                                    break;
+                                case 3:
+                                    toAttackStack.push([
+                                        AttackDq[0],
+                                        AttackDq[1] + 1,
+                                        3,
+                                    ]);
+                                    break;
                             }
-                            if (dontpass) {
-                                previousAttack = [x, y];
-                                console.log("attacked: ", previousAttack);
-
-                                if (myPlayer.checkCoordIfHit(previousAttack)) {
-                                    toStack = true;
-                                    toAttackQueue.clear();
-                                    switch (AttackDq[2]) {
-                                        case 0:
-                                            toAttackQueue.enqueue([
-                                                AttackDq[0] + 2,
-                                                AttackDq[1],
-                                                1,
-                                            ]);
-                                            toAttackQueue.enqueue([
-                                                AttackDq[0] - 1,
-                                                AttackDq[1],
-                                                0,
-                                            ]);
-                                            break;
-                                        case 1:
-                                            toAttackQueue.enqueue([
-                                                AttackDq[0] - 2,
-                                                AttackDq[1],
-                                                0,
-                                            ]);
-                                            toAttackQueue.enqueue([
-                                                AttackDq[0] + 1,
-                                                AttackDq[1],
-                                                1,
-                                            ]);
-                                            break;
-                                        case 2:
-                                            toAttackQueue.enqueue([
-                                                AttackDq[0],
-                                                AttackDq[1] + 2,
-                                                3,
-                                            ]);
-                                            toAttackQueue.enqueue([
-                                                AttackDq[0],
-                                                AttackDq[1] - 1,
-                                                2,
-                                            ]);
-                                            break;
-                                        case 3:
-                                            toAttackQueue.enqueue([
-                                                AttackDq[0],
-                                                AttackDq[1] - 2,
-                                                2,
-                                            ]);
-                                            toAttackQueue.enqueue([
-                                                AttackDq[0],
-                                                AttackDq[1] + 1,
-                                                3,
-                                            ]);
-
-                                            break;
-                                    }
-                                }
-                            } else {
-                                doRandomAttack(myPlayer);
-                            }
-                        } else {
-                            doRandomAttack(myPlayer);
-                            smartBotAttack = false;
-                            toStack = false;
-                            toAttackQueue.clear();
                         }
                     }
                 }
