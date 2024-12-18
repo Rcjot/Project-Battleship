@@ -10,7 +10,10 @@ body {
 button {
     cursor: pointer;
 }
-
+dialog {
+    min-height: 100vh;
+    min-width: 100vw;
+}
 #gameScreen {
     min-height: inherit;
     min-width: 100vw;

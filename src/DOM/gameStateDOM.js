@@ -3,6 +3,14 @@ import { playerGameBoard } from "./playerBoard/playerGameBoardDOM";
 import { gameFlow } from "../gameFlow";
 export const gameStates = (function () {
     const gameScreen = document.querySelector("#gameScreen");
+    const backBtn = document.createElement("button");
+    let currentState = "gameStart";
+
+    backBtn.textContent = "back";
+
+    backBtn.addEventListener("click", () => {
+        location.reload();
+    });
 
     function gameStart() {
         gameScreen.innerHTML = "";
@@ -25,7 +33,9 @@ export const gameStates = (function () {
     }
 
     function vsBotGame() {
+        currentState = "vsBotGame";
         gameScreen.innerHTML = "";
+        gameScreen.append(backBtn);
 
         const myPlayer = playerGameBoard();
         const myBot = botGameBoard();
@@ -34,6 +44,8 @@ export const gameStates = (function () {
         let smartBotAttack = false;
         const toAttackStack = [];
         document.addEventListener("createBotBoard", () => {
+            if (currentState != "vsBotGame") return;
+
             myPlayer.beforeGame.nextPhase();
             myBot.init();
         });
@@ -65,6 +77,8 @@ export const gameStates = (function () {
         }
 
         document.addEventListener("clickedBotTile", () => {
+            if (currentState != "vsBotGame") return;
+            myBot.renderBoard();
             if (myBot.checkAllShipsSunk() || myPlayer.checkAllShipsSunk()) {
                 const event = new Event("gameOver");
                 document.dispatchEvent(event);
@@ -138,6 +152,8 @@ export const gameStates = (function () {
         });
 
         document.addEventListener("gameOver", () => {
+            if (currentState != "vsBotGame") return;
+
             myBot.disableButtons();
         });
 
@@ -146,21 +162,87 @@ export const gameStates = (function () {
 
     function vsPlayerGame() {
         gameScreen.innerHTML = "";
+        currentState = "vsPlayerGame";
+        gameScreen.append(backBtn);
 
+        const myDialog = document.querySelector("dialog");
+        const closeBtn = document.querySelector("dialog button");
+        closeBtn.addEventListener("click", () => {
+            myDialog.close();
+        });
+        const navBar = document.createElement("div");
         let gameBoardFinishedCnt = 0;
         const myPlayer = playerGameBoard();
-        const myPlayer2 = playerGameBoard();
-
+        const myPlayer2 = playerGameBoard(true);
+        let player1Turn = true;
         myPlayer.beforeGame.init();
+        gameScreen.append(navBar);
 
         document.addEventListener("createBotBoard", () => {
+            if (currentState != "vsPlayerGame") return;
+
             gameBoardFinishedCnt++;
             if (gameBoardFinishedCnt === 2) {
+                console.log("finished two? should go next phase");
                 myPlayer.beforeGame.nextPhase(true);
                 myPlayer2.beforeGame.nextPhase(true);
+                myDialog.showModal();
             } else {
+                myPlayer.beforeGame.hideBoard();
                 myPlayer2.beforeGame.init();
             }
+        });
+
+        document.addEventListener("nextTurn", () => {
+            if (currentState != "vsPlayerGame") return;
+
+            if (myPlayer.checkAllShipsSunk() || myPlayer2.checkAllShipsSunk()) {
+                const event = new Event("gameOver");
+                document.dispatchEvent(event);
+                return;
+            }
+            if (player1Turn) {
+                //player1 clicked so player2s turn now!
+                myPlayer2.duringGameVSPlayer.disableBtns();
+                myPlayer2.duringGameVSPlayer.hideBoard();
+                createToNextPlayerBtn(player1Turn);
+            } else {
+                myPlayer.duringGameVSPlayer.disableBtns();
+                myPlayer.duringGameVSPlayer.hideBoard();
+                createToNextPlayerBtn(player1Turn);
+            }
+        });
+
+        function createToNextPlayerBtn(p1) {
+            console.log("here");
+            const toNextBtn = document.createElement("button");
+            navBar.append(toNextBtn);
+            toNextBtn.textContent = "next";
+            toNextBtn.addEventListener("click", () => {
+                if (p1) {
+                    myPlayer.duringGameVSPlayer.hideBoard();
+                    myPlayer2.duringGameVSPlayer.renderBoard();
+                    myPlayer.duringGameVSPlayer.enableBtns();
+                    myDialog.showModal();
+                    player1Turn = false;
+                } else {
+                    myPlayer2.duringGameVSPlayer.hideBoard();
+                    myPlayer.duringGameVSPlayer.renderBoard();
+                    myPlayer2.duringGameVSPlayer.enableBtns();
+                    myDialog.showModal();
+                    player1Turn = true;
+                }
+                navBar.innerHTML = "";
+            });
+        }
+
+        document.addEventListener("gameOver", () => {
+            if (currentState != "vsPlayerGame") return;
+            console.log("gameover?");
+            myPlayer.duringGameVSPlayer.renderBoard();
+            myPlayer2.duringGameVSPlayer.renderBoard();
+            myPlayer.duringGameVSPlayer.disableBtns();
+            myPlayer2.duringGameVSPlayer.disableBtns();
         });
     }
 

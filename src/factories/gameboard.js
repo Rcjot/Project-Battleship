@@ -161,7 +161,7 @@ const Gameboard = function () {
 
     function checkAllShipsSunk() {
         for (let ship of shipArr) {
-            console.log(ship.isSunk());
+            // console.log(ship.isSunk());
             if (ship.isSunk() === false) return false;
         }
         return true;
@@ -176,6 +176,7 @@ const Gameboard = function () {
         checkValid,
         board,
         checkTile,
+        coordsArr,
     };
 };
 

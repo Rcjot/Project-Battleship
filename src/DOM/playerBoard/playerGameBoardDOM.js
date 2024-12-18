@@ -2,7 +2,7 @@ const Player = require("../../factories/player");
 import { gridEventListeners } from "./gridEventListeners";
 import { gameFlow } from "../../gameFlow";
 
-export const playerGameBoard = function () {
+export const playerGameBoard = function (player2Bool = false) {
     const myPlayer = Player(true);
 
     const gameScreen = document.querySelector("#gameScreen");
@@ -57,6 +57,7 @@ export const playerGameBoard = function () {
                     this.divArr[i][j] = grid;
                     grid.setAttribute("id", "tile");
                     grid.setAttribute("value", `${i},${j}`);
+                    grid.setAttribute("style", "background-color: skyblue");
                 }
             }
         },
@@ -86,7 +87,15 @@ export const playerGameBoard = function () {
                 duringGameVSBot.init();
             }
         },
+        hideBoard: function () {
+            for (let BtnSubArr of this.divArr) {
+                for (let Btn of BtnSubArr) {
+                    Btn.setAttribute("style", "background-color: none");
+                }
+            }
+        },
         init: function () {
+            console.log("createdBoard");
             this.initCheckBoxes();
             this.createModifyBoard();
             this.addGridEventListeners();
@@ -94,6 +103,7 @@ export const playerGameBoard = function () {
             let botCreated = false;
             document.addEventListener("checkShips", () => {
                 if (this.checkAllShipsPlaced() && !botCreated) {
+                    console.log("all ships placed");
                     const event = new Event("createBotBoard");
                     document.dispatchEvent(event);
                     botCreated = true;
@@ -120,16 +130,34 @@ export const playerGameBoard = function () {
         renderBoard: function () {
             for (let i = 0; i < 10; i++) {
                 for (let j = 0; j < 10; j++) {
-                    if (myPlayer.playerGameboard.board[j][i] === 1) {
-                        this.divArr[j][i].setAttribute(
-                            "style",
-                            "background-color: yellow"
-                        );
-                    }
+                    this.divArr[j][i].setAttribute(
+                        "style",
+                        "background-color: skyblue"
+                    );
+
                     if (myPlayer.playerGameboard.board[j][i] === "x") {
                         this.divArr[j][i].textContent = "hit";
+                        this.divArr[j][i].setAttribute(
+                            "style",
+                            "background-color: darkgoldenrod"
+                        );
+                        if (myPlayer.playerGameboard.coordsArr[j][i].isSunk()) {
+                            this.divArr[j][i].setAttribute(
+                                "style",
+                                "background-color: red"
+                            );
+                        }
                     } else if (myPlayer.playerGameboard.board[j][i] === "o") {
                         this.divArr[j][i].textContent = "nohit";
+                        this.divArr[j][i].setAttribute(
+                            "style",
+                            "background-color: blue"
+                        );
+                    } else if (myPlayer.playerGameboard.board[j][i] === 1) {
+                        this.divArr[j][i].setAttribute(
+                            "style",
+                            "background-color: olive"
+                        );
                     }
                 }
             }
@@ -164,15 +192,111 @@ export const playerGameBoard = function () {
         addGridEventListeners: function () {
             for (let i = 0; i < 10; i++) {
                 for (let j = 0; j < 10; j++) {
-                    divArr[i][j].addEventListener("click", () => {
+                    this.divArr[i][j].addEventListener("click", () => {
                         if (myPlayer.playerGameboard.recieveAttack([j, i])) {
-                            divArr[i][j].textContent = "hit";
+                            this.divArr[i][j].textContent = "hit";
                         } else {
-                            divArr[i][j].textContent = "nohit";
+                            this.divArr[i][j].textContent = "nohit";
                         }
+                        const event = new Event("nextTurn");
+                        document.dispatchEvent(event);
                     });
                 }
             }
+        },
+        renderBoard: function () {
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    this.divArr[j][i].setAttribute(
+                        "style",
+                        "background-color: skyblue"
+                    );
+
+                    if (myPlayer.playerGameboard.board[j][i] === "x") {
+                        this.divArr[j][i].textContent = "hit";
+                        this.divArr[j][i].setAttribute(
+                            "style",
+                            "background-color: darkgoldenrod"
+                        );
+                        if (myPlayer.playerGameboard.coordsArr[j][i].isSunk()) {
+                            this.divArr[j][i].setAttribute(
+                                "style",
+                                "background-color: red"
+                            );
+                        }
+                    } else if (myPlayer.playerGameboard.board[j][i] === "o") {
+                        this.divArr[j][i].textContent = "nohit";
+                        this.divArr[j][i].setAttribute(
+                            "style",
+                            "background-color: blue"
+                        );
+                    } else if (myPlayer.playerGameboard.board[j][i] === 1) {
+                        this.divArr[j][i].setAttribute(
+                            "style",
+                            "background-color: olive"
+                        );
+                    }
+                }
+            }
+        },
+        hideBoard: function () {
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    this.divArr[j][i].setAttribute(
+                        "style",
+                        "background-color: skyblue"
+                    );
+
+                    if (myPlayer.playerGameboard.board[j][i] === "x") {
+                        this.divArr[j][i].textContent = "hit";
+                        this.divArr[j][i].setAttribute(
+                            "style",
+                            "background-color: darkgoldenrod"
+                        );
+                        if (myPlayer.playerGameboard.coordsArr[j][i].isSunk()) {
+                            this.divArr[j][i].setAttribute(
+                                "style",
+                                "background-color: red"
+                            );
+                        }
+                    } else if (myPlayer.playerGameboard.board[j][i] === "o") {
+                        this.divArr[j][i].textContent = "nohit";
+                        this.divArr[j][i].setAttribute(
+                            "style",
+                            "background-color: blue"
+                        );
+                    }
+                }
+            }
+        },
+        disableBtns: function () {
+            for (let BtnSubArr of this.divArr) {
+                for (let Btn of BtnSubArr) {
+                    Btn.disabled = true;
+                }
+            }
+        },
+        enableBtns: function () {
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    if (
+                        myPlayer.playerGameboard.board[j][i] === "." ||
+                        myPlayer.playerGameboard.board[j][i] === 1
+                    ) {
+                        this.divArr[j][i].disabled = false;
+                    }
+                }
+            }
+        },
+        init: function () {
+            shipPanel.innerHTML = "";
+            playerBoard.innerHTML = "";
+            this.createBoard();
+            if (!player2Bool) {
+                this.disableBtns();
+                this.renderBoard();
+            }
+            this.addGridEventListeners();
         },
     };
 

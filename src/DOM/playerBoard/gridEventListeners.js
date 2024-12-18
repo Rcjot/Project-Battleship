@@ -85,11 +85,17 @@ export const gridEventListeners = function (myPlayer) {
         if (validObj.validity) {
             // console.log(validObj.coveredCoordsArr);
             for (let coords of validObj.coveredCoordsArr) {
-                divArr[coords[1]][coords[0]].removeAttribute("style");
+                divArr[coords[1]][coords[0]].setAttribute(
+                    "style",
+                    "background-color: skyblue"
+                );
             }
         } else {
             for (let coords of validObj.coveredCoordsArr) {
-                divArr[coords[1]][coords[0]].removeAttribute("style");
+                divArr[coords[1]][coords[0]].setAttribute(
+                    "style",
+                    "background-color: skyblue"
+                );
             }
         }
         updateRenderBoard(divArr);
@@ -139,10 +145,12 @@ export const gridEventListeners = function (myPlayer) {
     }
 
     function keyBindRotateShip(checkBoxes) {
-        const rotateButton = document.querySelector(".rotateBtn");
-        rotateButton.addEventListener("click", () => {
-            rotateShip(checkBoxes);
-        });
+        const rotateButton = document.querySelectorAll(".rotateBtn");
+        for (let btn of rotateButton) {
+            btn.addEventListener("click", () => {
+                rotateShip(checkBoxes);
+            });
+        }
     }
 
     function rotateShip(checkBoxes) {
@@ -163,5 +171,6 @@ export const gridEventListeners = function (myPlayer) {
     return {
         addAllEvents,
         keyBindRotateShip,
+        updateRenderBoard,
     };
 };
