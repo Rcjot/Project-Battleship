@@ -90,7 +90,7 @@ export const playerGameBoard = function (player2Bool = false) {
         hideBoard: function () {
             for (let BtnSubArr of this.divArr) {
                 for (let Btn of BtnSubArr) {
-                    Btn.setAttribute("style", "background-color: none");
+                    Btn.setAttribute("style", "background-color: skyblue");
                 }
             }
         },
@@ -186,6 +186,7 @@ export const playerGameBoard = function (player2Bool = false) {
                     this.divArr[i][j] = grid;
                     grid.setAttribute("id", "tile");
                     grid.setAttribute("value", `${i},${j}`);
+                    grid.setAttribute("style", "background-color: skyblue");
                 }
             }
         },
