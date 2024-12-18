@@ -6,3 +6,5 @@ very long hiatus D:
 hard
 
 styling is tedious, so i think i shouldn't.. or should i?
+
+nope
